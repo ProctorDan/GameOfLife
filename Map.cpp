@@ -5,6 +5,7 @@
 #include <math.h>
 #include <time.h>
 #include <sstream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -90,16 +91,49 @@ char** Map::getMap()
 
 void Map::printMap()
 {
-	for(int i = 0; i < height; ++i) 
+    if (pMethod == "pause")
     {
-		for (int j = 0; j < length; ++j) 
+        for(int i = 0; i < height; ++i) 
         {
-			cout << currentMap[i][j];
-		}
-		cout << endl;
+            for (int j = 0; j < length; ++j) 
+            {
+                cout << currentMap[i][j];
+            }
+            cout << endl;
+        }
+        sleep(1);
     }
-}
+    else if (pMethod == "enter")
+    {
+        for(int i = 0; i < height; ++i) 
+        {
+            for (int j = 0; j < length; ++j) 
+            {
+                cout << currentMap[i][j];
+            }
+            cout << endl;
+        }
+        system("pause");
+        cout << endl;
+    }
+    else if (pMethod == "file")
+    {
+        for(int i = 0; i < height; ++i) 
+        {
+            for (int j = 0; j < length; ++j) 
+            {
+                cout << currentMap[i][j];
+            }
+            cout << endl;
+        }
+    }
+    else
+    {
+        cout << "Something went wrong outputting file..." << endl;
+    }
+    
 
+}
 
 void Map::buildRandomMap()
 {

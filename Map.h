@@ -21,6 +21,7 @@ class Map
       void printMap();
       void buildRandomMap();
       void buildFileMap();
+      
 
       int height;
       int length;
