@@ -200,18 +200,24 @@ void Map::buildRandomMap()
         }
 
     }
-
+    // creates the same new map and current map to start
     currentMap = new char*[height];
     for (int i = 0; i < height; ++i)
     {
         currentMap[i] = new char[length];
     }
+    newMap = new char*[height];
+    for (int i = 0; i < height; ++i)
+    {
+        newMap[i] = new char[length];
+    }    
 
     for (int j = 0; j < height; ++j)
     {
       for (int f = 0; f < length; ++f)
       {
           currentMap[j][f] = '-';
+          newMap[j][f] = '-';
       }
     }
 
@@ -225,14 +231,48 @@ void Map::buildRandomMap()
     while(xCount != numX)
     {
         randH = rand() % (height);
-        randL = rand() % (length) ;
+        randL = rand() % (length);
 
         if (currentMap[randH][randL] == '-')
         {
             currentMap[randH][randL] = 'X';
+            newMap[randH][randL] = 'X';
             xCount++;
         } 
-    }
+    } 
 }
 
+bool Map::checkStable()
+{
+    for (int i = 0; i < height; ++i)
+    {
+       	for (int j = 0; j < length; ++j) 
+        {
+	       	if (currentMap[i][j] == newMap[i][j]) 
+            {
+	       		continue;
+	        }
+           	else 
+            {
+           		return false;
+         	}
+       	}
+    }
 
+    cout << "The world is stable." << endl;
+    return true;  
+}
+
+void Map::classicMode()
+{
+    cout << "Welcome to classic mode!" << endl;
+    sleep(1);
+    generation = 1;
+    bool check = false;
+
+    while(!check)
+    {
+
+    }
+    
+}

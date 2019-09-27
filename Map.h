@@ -21,7 +21,8 @@ class Map
       void printMap();
       void buildRandomMap();
       void buildFileMap();
-      
+      bool checkStable();
+      void classicMode();
 
       int height;
       int length;
@@ -29,6 +30,7 @@ class Map
       std::string pMethod;
       char **newMap;
       char **currentMap;
+      int generation;
 };
 
 #endif
