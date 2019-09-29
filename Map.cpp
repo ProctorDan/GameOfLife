@@ -6,6 +6,8 @@
 #include <time.h>
 #include <sstream>
 #include <unistd.h>
+#include <limits>
+
 
 using namespace std;
 
@@ -62,9 +64,7 @@ void Map::setPrint()
         else
         {
             method = false;
-            cout << "Sorry yo that wasn't an option... try again!" << endl;
-            system("pause");
-            cout << endl;
+            cout << endl << "Sorry yo that wasn't an option... try again!" << endl << endl;
         }
     }
 }
@@ -91,6 +91,7 @@ char** Map::getMap()
 
 void Map::printMap()
 {
+    
     if (pMethod == "pause")
     {
         for(int i = 0; i < height; ++i) 
@@ -113,8 +114,18 @@ void Map::printMap()
             }
             cout << endl;
         }
-        system("pause");
-        cout << endl;
+        if (generation == 1)
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Press [enter] to continue..." << endl;
+            cin.get();
+        }
+        else
+        {
+            cout << "Press [enter] to continue..." << endl;
+            cin.get();
+        }
+
     }
     else if (pMethod == "file")
     {
@@ -129,7 +140,7 @@ void Map::printMap()
     }
     else
     {
-        cout << "Something went wrong outputting file..." << endl;
+        cout << "Something went wrong outputting..." << endl;
     }
     cout << endl;
 

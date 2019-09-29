@@ -23,8 +23,7 @@ int main (int argc, char **argv)
 
         if (inp != "1" && inp != "2")
         {
-            cout << "Bro I said 1 or 2... " << inp << " wasn't an option! Try again." << endl;
-            system("pause");
+            cout << endl << "Bro I said 1 or 2... " << inp << " wasn't an option! Try again." << endl;
             cout << endl;
         }
 
