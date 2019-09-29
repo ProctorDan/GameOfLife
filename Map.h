@@ -21,8 +21,13 @@ class Map
       void printMap();
       void buildRandomMap();
       void buildFileMap();
+      void chooseMode();
       bool checkStable();
       void classicMode();
+      void mirrorMode();
+      void donutMode();
+      void alter(char top, char bottom, char left, char right, char tl, char tr, char bl, char br, int row, int col);
+      void copyMap();
 
       int height;
       int length;

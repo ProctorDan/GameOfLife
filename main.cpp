@@ -41,8 +41,7 @@ int main (int argc, char **argv)
     }
 
     char** map = m->getMap();
-
-    m->printMap();
+    m->chooseMode();
 
     delete m;
     return 0;

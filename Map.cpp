@@ -131,7 +131,7 @@ void Map::printMap()
     {
         cout << "Something went wrong outputting file..." << endl;
     }
-    
+    cout << endl;
 
 }
 
@@ -263,16 +263,242 @@ bool Map::checkStable()
     return true;  
 }
 
+void Map::copyMap()
+{
+    for (int j = 0; j < height; ++j)
+    {
+      for (int f = 0; f < length; ++f)
+      {
+          currentMap[j][f] = newMap[j][f];
+      }
+    }
+}
+
+void Map::chooseMode()
+{
+    cout << "Choose a game mode to play" << endl;
+    cout << "Modes: \"classic\", \"mirror\", \"donut\"." << endl;
+    string choose;
+    bool mode = false;
+    while(!mode)
+    {
+        cin >> choose;
+        transform(choose.begin(), choose.end(), choose.begin(), ::tolower);
+        if (choose == "classic")
+        {
+            mode = true;
+            classicMode();
+        }
+        else if (choose == "mirror")
+        {
+            mode = true;
+            mirrorMode();
+        }
+        else if (choose == "donut")
+        {
+            mode = true;
+            donutMode();
+        }
+        else
+        {
+            cout << "Sorry that wasn't a game mode. Try again." << endl;
+        }
+    }
+}
+
+void Map::alter(char top, char bottom, char left, char right, char tl, char tr, char bl, char br, int row, int col)
+{
+    int neighborCount = 0;
+    if (top == 'X')
+    {
+        neighborCount++;
+    }
+    if (bottom == 'X')
+    {
+        neighborCount++;
+    }
+    if (left == 'X')
+    {
+        neighborCount++;
+    }
+    if (right == 'X')
+    {
+        neighborCount++;
+    }
+    if (tl == 'X')
+    {
+        neighborCount++;
+    }
+    if (tr == 'X')
+    {
+        neighborCount++;
+    }
+    if (bl == 'X')
+    {
+        neighborCount++;
+    }
+    if (br == 'X')
+    {
+        neighborCount++;
+    }
+    
+    if (neighborCount <= 1)
+    {
+        newMap[row][col] = '-';
+    }
+    else if (neighborCount == 3)
+    {
+        newMap[row][col] = 'X';
+    }
+    else if (neighborCount >= 4)
+    {
+        newMap[row][col] = '-';
+    }
+
+}
+
 void Map::classicMode()
 {
-    cout << "Welcome to classic mode!" << endl;
-    sleep(1);
+    cout << "Welcome to classic mode!" << endl << endl;
     generation = 1;
     bool check = false;
 
     while(!check)
     {
+        cout << "Generation #" << generation << endl << endl;
+        printMap();
+        generation++;
 
+        for(int row = 0; row < height; ++row)
+        {
+            for(int col = 0; col < length; ++col)
+            {
+                char left;
+                char right;
+                char top;
+                char bottom;
+                char tr; // top right
+                char tl; // top left
+                char br; // bottom right
+                char bl; // bottom left
+
+                // Special cases (all side cells)
+                if (row == 0 && col == 0) // top left
+                {
+                    top = '-';
+                    tl = '-';
+                    tr = '-';
+                    left = '-';
+                    bl = '-';
+                    bottom = currentMap[row+1][col];
+                    br = currentMap[row+1][col+1];
+                    right = currentMap[row][col+1];
+                }
+                else if ((row == height - 1) && col == 0) // bottom left
+                {
+                    bottom = '-';
+                    br = '-';
+                    bl = '-';
+                    left = '-';
+                    tl = '-';
+                    top = currentMap[row-1][col];
+                    tr = currentMap[row-1][col+1];
+                    right = currentMap[row][col+1];
+                }
+                else if (row == 0 && col == length - 1) // Top right
+                {
+                    bottom = currentMap[row+1][col];
+                    br = '-';
+                    bl = currentMap[row+1][col-1];
+                    left = currentMap[row][col-1];
+                    tl = '-';
+                    top = '-';
+                    tr = '-';
+                    right = '-';      
+                }
+                else if ((row == height - 1) && (col == length - 1)) // Bottom right
+                {
+                    bottom = '-';
+                    br = '-';
+                    bl = '-';
+                    left = currentMap[row][col-1];
+                    tl = currentMap[row-1][col-1];
+                    top = currentMap[row-1][col];
+                    tr = '-';
+                    right = '-';
+                }
+                else if (row == 0) // Top row
+                {
+                    bottom = currentMap[row+1][col];
+                    br = currentMap[row+1][col+1];
+                    bl = currentMap[row+1][col-1];
+                    left = currentMap[row][col-1];
+                    tl = '-';
+                    top = '-';
+                    tr = '-';
+                    right = currentMap[row][col+1];
+                }
+                else if (row == height - 1) // Bottom row
+                {
+                    bottom = '-';
+                    br = '-';
+                    bl = '-';
+                    left = currentMap[row][col-1];
+                    tl = currentMap[row-1][col-1];
+                    top = currentMap[row-1][col];
+                    tr = currentMap[row-1][col+1];
+                    right = currentMap[row][col+1];
+                }
+                else if (col == 0) // Left column
+                {
+                    bottom = currentMap[row+1][col];
+                    br = currentMap[row+1][col+1];
+                    bl = '-';
+                    left = '-';
+                    tl = '-';
+                    top = currentMap[row-1][col];
+                    tr = currentMap[row-1][col+1];
+                    right = currentMap[row][col+1];                    
+                }
+                else if (col == length - 1) // Right column
+                {
+                    bottom = currentMap[row+1][col];
+                    br = '-';
+                    bl = currentMap[row+1][col-1];
+                    left = currentMap[row][col-1];
+                    tl = currentMap[row-1][col-1];
+                    top = currentMap[row-1][col];
+                    tr = '-';
+                    right = '-';
+                }
+                else
+                {
+                    bottom = currentMap[row+1][col];
+                    br = currentMap[row+1][col+1];
+                    bl = currentMap[row+1][col-1];
+                    left = currentMap[row][col-1];
+                    tl = currentMap[row-1][col-1];
+                    top = currentMap[row-1][col];
+                    tr = currentMap[row-1][col+1];
+                    right = currentMap[row][col+1];
+                }
+                alter(top, bottom, left, right, tl, tr, bl, br, row, col);
+            }
+        }
+        check = checkStable();
+        if (!check)
+        {
+           copyMap();
+        }
     }
-    
+}
+
+void Map::mirrorMode()
+{
+    cout << "mirror activated" << endl;
+}
+
+void Map::donutMode()
+{
+    cout << "donut activated" << endl;
 }
