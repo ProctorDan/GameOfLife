@@ -666,22 +666,22 @@ void Map::donutMode()
                 // Special cases (all side cells)
                 if (row == 0 && col == 0) // top left
                 {
-                    top = currentMap[row][col];
-                    tl = '-';
-                    tr = '-';
-                    left = '-';
-                    bl = '-';
+                    top = currentMap[row + height-1][col];
+                    tl = currentMap[row + height-1][col + length-1];
+                    tr = currentMap[row + height-1][col+1];
+                    left = currentMap[row][col + length-1];
+                    bl = currentMap[row+1][col + length-1];
                     bottom = currentMap[row+1][col];
                     br = currentMap[row+1][col+1];
                     right = currentMap[row][col+1];
                 }
                 else if ((row == height - 1) && col == 0) // bottom left
                 {
-                    bottom = '-';
-                    br = '-';
-                    bl = '-';
-                    left = '-';
-                    tl = '-';
+                    bottom = currentMap[row - height+1][col];
+                    br = currentMap[row - height+1][col+1];
+                    bl = currentMap[row - height+1][col + length-1];
+                    left = currentMap[row][col + length-1];
+                    tl = currentMap[row-1][col + length-1];
                     top = currentMap[row-1][col];
                     tr = currentMap[row-1][col+1];
                     right = currentMap[row][col+1];
@@ -689,24 +689,24 @@ void Map::donutMode()
                 else if (row == 0 && col == length - 1) // Top right
                 {
                     bottom = currentMap[row+1][col];
-                    br = '-';
+                    br = currentMap[row+1][col - length+1];
                     bl = currentMap[row+1][col-1];
                     left = currentMap[row][col-1];
-                    tl = '-';
-                    top = '-';
-                    tr = '-';
-                    right = '-';      
+                    tl = currentMap[row + height-1][col-1];
+                    top = currentMap[row + height-1][col];
+                    tr = currentMap[row + height-1][col - length+1];
+                    right = currentMap[row][col - length+1];      
                 }
                 else if ((row == height - 1) && (col == length - 1)) // Bottom right
                 {
-                    bottom = '-';
-                    br = '-';
-                    bl = '-';
+                    bottom = currentMap[row - height+1][col];
+                    br = currentMap[row - height+1][col - length+1];
+                    bl = currentMap[row - height+1][col-1];
                     left = currentMap[row][col-1];
                     tl = currentMap[row-1][col-1];
                     top = currentMap[row-1][col];
-                    tr = '-';
-                    right = '-';
+                    tr = currentMap[row-1][col - length+1];
+                    right = currentMap[row][col - length+1];
                 }
                 else if (row == 0) // Top row
                 {
@@ -714,16 +714,16 @@ void Map::donutMode()
                     br = currentMap[row+1][col+1];
                     bl = currentMap[row+1][col-1];
                     left = currentMap[row][col-1];
-                    tl = '-';
-                    top = '-';
-                    tr = '-';
+                    tl = currentMap[row + height-1][col-1];
+                    top = currentMap[row + height-1][col];
+                    tr = currentMap[row + height-1][col+1];
                     right = currentMap[row][col+1];
                 }
                 else if (row == height - 1) // Bottom row
                 {
-                    bottom = '-';
-                    br = '-';
-                    bl = '-';
+                    bottom = currentMap[row - height+1][col];
+                    br = currentMap[row - height+1][col+1];
+                    bl = currentMap[row - height+1][col-1];
                     left = currentMap[row][col-1];
                     tl = currentMap[row-1][col-1];
                     top = currentMap[row-1][col];
@@ -734,9 +734,9 @@ void Map::donutMode()
                 {
                     bottom = currentMap[row+1][col];
                     br = currentMap[row+1][col+1];
-                    bl = '-';
-                    left = '-';
-                    tl = '-';
+                    bl = currentMap[row+1][col + length-1];
+                    left = currentMap[row][col + length-1];
+                    tl = currentMap[row-1][col + length-1];
                     top = currentMap[row-1][col];
                     tr = currentMap[row-1][col+1];
                     right = currentMap[row][col+1];                    
@@ -744,13 +744,13 @@ void Map::donutMode()
                 else if (col == length - 1) // Right column
                 {
                     bottom = currentMap[row+1][col];
-                    br = '-';
+                    br = currentMap[row+1][col - length+1];
                     bl = currentMap[row+1][col-1];
                     left = currentMap[row][col-1];
                     tl = currentMap[row-1][col-1];
                     top = currentMap[row-1][col];
-                    tr = '-';
-                    right = '-';
+                    tr = currentMap[row-1][col - length+1];
+                    right = currentMap[row][col - length+1];
                 }
                 else
                 {
