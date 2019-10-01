@@ -59,7 +59,11 @@ void Map::setPrint()
         }
         else if(pMethod == "file")
         {
+            string partOut;
             method = true;
+            cout << "Enter a name for the output file. The extension '.txt' will automatically be added to the end of the name." << endl;
+            cin >> partOut;
+            outFile = partOut + ".txt";
         }
         else
         {
@@ -131,22 +135,22 @@ void Map::printMap()
     }
     else if (pMethod == "file")
     {
-        
-        cout << "Generation #" << generation << endl << endl;
+        ofstream mapStream;
+        mapStream.open(outFile, ios::app);
+        mapStream << "\nGeneration #" << generation << endl << endl;
         for(int i = 0; i < height; ++i) 
         {
             for (int j = 0; j < length; ++j) 
             {
-                cout << currentMap[i][j];
+                mapStream << currentMap[i][j];
             }
-            cout << endl;
+            mapStream << endl;
         }
     }
     else
     {
         cout << "Something went wrong outputting..." << endl;
     }
-    cout << endl;
 }
 
 void Map::setEmptyMaps()
@@ -337,9 +341,16 @@ bool Map::checkStable()
 
     if (pMethod == "file")
     {
-
+        ofstream mapStream;
+        mapStream.open(outFile, ios::app);
+        mapStream << "\nThe world is stable.";
+        mapStream.close();
     }
-    cout << "The world is stable." << endl;
+    else
+    {
+        cout << "The world is stable." << endl;
+    }
+    
     return true;  
 }
 
@@ -438,7 +449,19 @@ void Map::alter(char top, char bottom, char left, char right, char tl, char tr, 
 
 void Map::classicMode()
 {
-    cout << endl << "Welcome to classic mode!" << endl << endl;
+
+    if (pMethod == "file")
+    {
+        ofstream mapStream;
+        mapStream.open(outFile);
+        mapStream << "Welcome to classic mode!\n\n";
+        mapStream.close();
+    }
+    else
+    {
+        cout << endl << "Welcome to classic mode!" << endl << endl;
+    }
+    
     generation = 0;
     bool check = false;
 
@@ -573,7 +596,19 @@ void Map::classicMode()
 
 void Map::mirrorMode()
 {
-    cout << endl << "Welcome to mirror mode!" << endl << endl;
+
+    if (pMethod == "file")
+    {
+        ofstream mapStream;
+        mapStream.open(outFile);
+        mapStream << "Welcome to mirror mode!\n\n";
+        mapStream.close();
+    }
+    else
+    {
+        cout << endl << "Welcome to mirror mode!" << endl << endl;
+    }
+ 
     generation = 0;
     bool check = false;
 
@@ -708,7 +743,18 @@ void Map::mirrorMode()
 
 void Map::donutMode()
 {
-    cout << endl << "Welcome to donut mode!" << endl << endl;
+    if (pMethod == "file")
+    {
+        ofstream mapStream;
+        mapStream.open(outFile);
+        mapStream << "Welcome to donut mode!\n\n";
+        mapStream.close();
+    }
+    else
+    {
+        cout << endl << "Welcome to donut mode!" << endl << endl;
+    }
+
     generation = 0;
     bool check = false;
 

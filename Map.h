@@ -38,6 +38,7 @@ class Map
       char **currentMap;
       int generation;
       std::string filePath;
+      std::string outFile;
 };
 
 #endif
