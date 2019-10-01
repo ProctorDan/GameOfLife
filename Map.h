@@ -21,6 +21,7 @@ class Map
       void printMap();
       void buildRandomMap();
       void buildFileMap();
+      void setEmptyMaps();
       void chooseMode();
       bool checkStable();
       void classicMode();
@@ -36,6 +37,7 @@ class Map
       char **newMap;
       char **currentMap;
       int generation;
+      std::string filePath;
 };
 
 #endif

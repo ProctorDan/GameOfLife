@@ -36,7 +36,7 @@ int main (int argc, char **argv)
     }
     else
     {
-        m->setRandom(true);
+        m->setRandom(false);
     }
 
     char** map = m->getMap();

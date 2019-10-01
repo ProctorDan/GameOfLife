@@ -31,7 +31,7 @@ void Map::setRandom(bool randy)
     }
     else
     {
-        cout << "oy" << endl;
+        buildFileMap();
     }
 
     setPrint();
@@ -94,6 +94,7 @@ void Map::printMap()
     
     if (pMethod == "pause")
     {
+        cout << "Generation #" << generation << endl << endl;
         for(int i = 0; i < height; ++i) 
         {
             for (int j = 0; j < length; ++j) 
@@ -106,6 +107,7 @@ void Map::printMap()
     }
     else if (pMethod == "enter")
     {
+        cout << "Generation #" << generation << endl << endl;
         for(int i = 0; i < height; ++i) 
         {
             for (int j = 0; j < length; ++j) 
@@ -129,6 +131,8 @@ void Map::printMap()
     }
     else if (pMethod == "file")
     {
+        
+        cout << "Generation #" << generation << endl << endl;
         for(int i = 0; i < height; ++i) 
         {
             for (int j = 0; j < length; ++j) 
@@ -143,6 +147,77 @@ void Map::printMap()
         cout << "Something went wrong outputting..." << endl;
     }
     cout << endl;
+}
+
+void Map::setEmptyMaps()
+{
+    currentMap = new char*[height];
+    for (int i = 0; i < height; ++i)
+    {
+        currentMap[i] = new char[length];
+    }
+    newMap = new char*[height];
+    for (int i = 0; i < height; ++i)
+    {
+        newMap[i] = new char[length];
+    } 
+}
+
+void Map::buildFileMap()
+{
+    fstream mapStream;
+    bool foundFile = false;
+    cout << "Type the file path to input." << endl;
+    while (!foundFile)
+    {
+        cin >> filePath;
+        mapStream.open(filePath);
+        if (mapStream.fail())
+        {
+            cout << "That file does not exist." << endl;
+            cout << "Please enter another file path." << endl;
+            continue;
+        }
+        else
+        {
+            cout << "File inputted." << endl;
+            foundFile = true;
+        }
+    }
+
+    string line;
+    int lineCount = -2;
+
+    while(getline(mapStream, line))
+    {
+        if (lineCount == -2)
+        {
+            stringstream dimensions(line);
+            dimensions >> height;
+            lineCount++;
+            continue;
+        }
+        else if (lineCount == -1)
+        {
+            stringstream dimensions(line);
+            dimensions >> length;
+            lineCount++;
+            continue;
+        }
+
+        else if (lineCount == 0)
+        {
+            setEmptyMaps();
+        }
+
+        for(int ch = 0; ch < line.length(); ++ch)
+        {
+            currentMap[lineCount][ch] = line[ch];
+            newMap[lineCount][ch] = line[ch];
+        }
+        lineCount++;
+    }
+    
 }
 
 void Map::buildRandomMap()
@@ -211,16 +286,7 @@ void Map::buildRandomMap()
 
     }
     // creates the same new map and current map to start
-    currentMap = new char*[height];
-    for (int i = 0; i < height; ++i)
-    {
-        currentMap[i] = new char[length];
-    }
-    newMap = new char*[height];
-    for (int i = 0; i < height; ++i)
-    {
-        newMap[i] = new char[length];
-    }    
+    setEmptyMaps();    
 
     for (int j = 0; j < height; ++j)
     {
@@ -269,6 +335,10 @@ bool Map::checkStable()
        	}
     }
 
+    if (pMethod == "file")
+    {
+
+    }
     cout << "The world is stable." << endl;
     return true;  
 }
@@ -374,7 +444,6 @@ void Map::classicMode()
 
     while(!check)
     {
-        cout << "Generation #" << generation << endl << endl;
         printMap();
         generation++;
 
@@ -510,7 +579,6 @@ void Map::mirrorMode()
 
     while(!check)
     {
-        cout << "Generation #" << generation << endl << endl;
         printMap();
         generation++;
 
@@ -646,7 +714,6 @@ void Map::donutMode()
 
     while(!check)
     {
-        cout << "Generation #" << generation << endl << endl;
         printMap();
         generation++;
 
