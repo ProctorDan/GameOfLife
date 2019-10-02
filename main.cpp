@@ -32,15 +32,14 @@ int main (int argc, char **argv)
     Map *m = new Map();
     if (inp == "1")
     {
-        m->setRandom(true);
+        m->setRandom(true); // sets random map
     }
     else
     {
-        m->setRandom(false);
+        m->setRandom(false); // sets file map
     }
 
-    char** map = m->getMap();
-    m->chooseMode();
+    m->chooseMode(); // chooses game mode
 
     delete m;
     return 0;
