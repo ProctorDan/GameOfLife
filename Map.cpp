@@ -11,9 +11,11 @@
 
 using namespace std;
 
-Map::Map()
+Map::Map() // set default values
 {
-    cout << "In the constructor" << endl;
+    height = 5;
+    length = 5;
+    density = .5;
 } 
 
 Map::~Map()
@@ -37,7 +39,7 @@ void Map::setRandom(bool randy)
     setPrint();
 }
 
-void Map::setPrint()
+void Map::setPrint() // sets print methods
 {
     bool method = false;
 
@@ -108,7 +110,7 @@ void Map::printMap()
             }
             cout << endl;
         }
-        sleep(1);
+        sleep(1); // pauses for 1 second
     }
     else if (pMethod == "enter")
     {
@@ -121,7 +123,7 @@ void Map::printMap()
             }
             cout << endl;
         }
-        if (generation == 0)
+        if (generation == 0) // there is leftover input on the first generation so needed this
         {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Press [enter] to continue..." << endl;
@@ -323,7 +325,7 @@ void Map::buildRandomMap()
     } 
 }
 
-bool Map::checkStable()
+bool Map::checkStable() // checks if 
 {
     for (int i = 0; i < height; ++i)
     {
@@ -398,7 +400,7 @@ void Map::chooseMode()
     }
 }
 
-void Map::alter(char top, char bottom, char left, char right, char tl, char tr, char bl, char br, int row, int col)
+void Map::alter(char top, char bottom, char left, char right, char tl, char tr, char bl, char br, int row, int col) // will alter the new map
 {
     int neighborCount = 0;
     if (top == 'X')
