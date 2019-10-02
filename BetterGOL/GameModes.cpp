@@ -1,3 +1,5 @@
+#include "GameModes.h"
+#include "GameFunctions.h"
 #include "Map.h"
 #include <iostream>
 #include <string>
@@ -11,34 +13,116 @@
 
 using namespace std;
 
-Map::Map()
+GameModes::GameModes()
 {
-    cout << "In the constructor" << endl;
+    height = Map().getHeight();
+    length = Map().getLength();
+    density = Map().getDensity();
+
 } 
 
-Map::~Map()
+GameModes::~GameModes()
 {
-    delete currentMap;
-    delete newMap;
+
 }
 
-void Map::setRandom(bool randy)
+void GameModes::copyMap()
 {
-
-    if(randy)
+    for (int j = 0; j < height; ++j)
     {
-        buildRandomMap();
+        for (int f = 0; f < length; ++f)
+        {
+          currentMap[j][f] = newMap[j][f];
+        }
+    }
+}
+
+bool GameModes::checkStable()
+{
+    for (int i = 0; i < height; ++i)
+    {
+       	for (int j = 0; j < length; ++j) 
+        {
+	       	if (currentMap[i][j] == newMap[i][j]) 
+            {
+	       		continue;
+	        }
+           	else 
+            {
+           		return false;
+         	}
+       	}
+    }
+
+    if (pMethod == "file")
+    {
+        ofstream mapStream;
+        mapStream.open(outFile, ios::app);
+        mapStream << "\nThe world is stable.";
+        mapStream.close();
     }
     else
     {
-        buildFileMap();
+        cout << "The world is stable." << endl;
     }
-
-    setPrint();
+    
+    return true;  
 }
 
-void Map::setPrint()
+
+void GameModes::alter(char top, char bottom, char left, char right, char tl, char tr, char bl, char br, int row, int col)
 {
+    int neighborCount = 0;
+    if (top == 'X')
+    {
+        neighborCount++;
+    }
+    if (bottom == 'X')
+    {
+        neighborCount++;
+    }
+    if (left == 'X')
+    {
+        neighborCount++;
+    }
+    if (right == 'X')
+    {
+        neighborCount++;
+    }
+    if (tl == 'X')
+    {
+        neighborCount++;
+    }
+    if (tr == 'X')
+    {
+        neighborCount++;
+    }
+    if (bl == 'X')
+    {
+        neighborCount++;
+    }
+    if (br == 'X')
+    {
+        neighborCount++;
+    }
+    
+    if (neighborCount <= 1)
+    {
+        newMap[row][col] = '-';
+    }
+    else if (neighborCount == 3)
+    {
+        newMap[row][col] = 'X';
+    }
+    else if (neighborCount >= 4)
+    {
+        newMap[row][col] = '-';
+    }
+}
+
+void GameModes::setPrint()
+{
+    
     bool method = false;
 
     while(!method)
@@ -74,29 +158,9 @@ void Map::setPrint()
     }
 }
 
-int Map::getHeight()
+void GameModes::printMap()
 {
-    return height;
-}
 
-int Map::getLength()
-{
-    return length;
-}
-
-float Map::getDensity()
-{
-    return density;
-}
-
-char** Map::getMap()
-{
-    return currentMap;
-}
-
-void Map::printMap()
-{
-    
     if (pMethod == "pause")
     {
         cout << "\nGeneration #" << generation << endl << endl;
@@ -154,302 +218,14 @@ void Map::printMap()
     }
 }
 
-void Map::setEmptyMaps()
+void GameModes::classicMode()
 {
-    currentMap = new char*[height];
-    for (int i = 0; i < height; ++i)
-    {
-        currentMap[i] = new char[length];
-    }
-    newMap = new char*[height];
-    for (int i = 0; i < height; ++i)
-    {
-        newMap[i] = new char[length];
-    } 
-}
-
-void Map::buildFileMap()
-{
-    fstream mapStream;
-    bool foundFile = false;
-    cout << "Type the file path to input." << endl;
-    while (!foundFile)
-    {
-        cin >> filePath;
-        mapStream.open(filePath);
-        if (mapStream.fail())
-        {
-            cout << "That file does not exist." << endl;
-            cout << "Please enter another file path." << endl;
-            continue;
-        }
-        else
-        {
-            cout << "File inputted." << endl;
-            foundFile = true;
-        }
-    }
-
-    string line;
-    int lineCount = -2;
-
-    while(getline(mapStream, line))
-    {
-        if (lineCount == -2)
-        {
-            stringstream dimensions(line);
-            dimensions >> height;
-            lineCount++;
-            continue;
-        }
-        else if (lineCount == -1)
-        {
-            stringstream dimensions(line);
-            dimensions >> length;
-            lineCount++;
-            continue;
-        }
-
-        else if (lineCount == 0)
-        {
-            setEmptyMaps();
-        }
-
-        for(int ch = 0; ch < line.length(); ++ch)
-        {
-            currentMap[lineCount][ch] = line[ch];
-            newMap[lineCount][ch] = line[ch];
-        }
-        lineCount++;
-    }
-    
-}
-
-void Map::buildRandomMap()
-{
-    bool l = false;
-    bool h = false;
-    bool dens = false;
-
-    while(!h)
-    {
-        cout << "Please enter a height for the map" << endl; 
-        cin >> height;
-
-        if(cin.fail())
-        {
-            cout << "That was not an integer." << endl;
-            cin.clear();
-            cin.ignore(256,'\n');
-        }
-
-        else
-        {
-            h = true;
-        }
-    }
-        
-    while(!l)
-    {
-        cout << "Please enter a length for the map" << endl; 
-        cin >> length;
-
-        if(cin.fail())
-        {
-            cout << "That was not an integer." << endl;
-            cin.clear();
-            cin.ignore(256,'\n');
-        }
-
-        else
-        {
-            l = true;
-        }
-    }
-
-    while(!dens)
-    {
-        cout << "Please enter a density between 0 and 1 for the map" << endl; 
-        cin >> density;
-
-        if(cin.fail())
-        {
-            cout << "That was not a float." << endl;
-            cin.clear();
-            cin.ignore(256,'\n');
-        }
-
-        else if ((density >= 0.0) && (density <= 1.0))
-        {
-            dens = true;
-        }
-
-        else
-        {
-            cout << "That was not between 0 and 1... c'mon it's not that hard" << endl;
-        }
-
-    }
-    // creates the same new map and current map to start
-    setEmptyMaps();    
-
-    for (int j = 0; j < height; ++j)
-    {
-      for (int f = 0; f < length; ++f)
-      {
-          currentMap[j][f] = '-';
-          newMap[j][f] = '-';
-      }
-    }
-
-    int totalCells = height * length;
-    float numX = round(totalCells * density);
-    srand(time(NULL));
-    int randH = 0;
-    int randL = 0;
-    int xCount = 0;
-
-    while(xCount != numX)
-    {
-        randH = rand() % (height);
-        randL = rand() % (length);
-
-        if (currentMap[randH][randL] == '-')
-        {
-            currentMap[randH][randL] = 'X';
-            newMap[randH][randL] = 'X';
-            xCount++;
-        } 
-    } 
-}
-
-bool Map::checkStable()
-{
-    for (int i = 0; i < height; ++i)
-    {
-       	for (int j = 0; j < length; ++j) 
-        {
-	       	if (currentMap[i][j] == newMap[i][j]) 
-            {
-	       		continue;
-	        }
-           	else 
-            {
-           		return false;
-         	}
-       	}
-    }
-
-    if (pMethod == "file")
-    {
-        ofstream mapStream;
-        mapStream.open(outFile, ios::app);
-        mapStream << "\nThe world is stable.";
-        mapStream.close();
-    }
-    else
-    {
-        cout << "The world is stable." << endl;
-    }
-    
-    return true;  
-}
-
-void Map::copyMap()
-{
-    for (int j = 0; j < height; ++j)
-    {
-        for (int f = 0; f < length; ++f)
-        {
-          currentMap[j][f] = newMap[j][f];
-        }
-    }
-}
-
-void Map::chooseMode()
-{
-    cout << "Choose a game mode to play" << endl;
-    cout << "Modes: \"classic\", \"mirror\", \"donut\"." << endl;
-    string choose;
-    bool mode = false;
-    while(!mode)
-    {
-        cin >> choose;
-        transform(choose.begin(), choose.end(), choose.begin(), ::tolower);
-        if (choose == "classic")
-        {
-            mode = true;
-            classicMode();
-        }
-        else if (choose == "mirror")
-        {
-            mode = true;
-            mirrorMode();
-        }
-        else if (choose == "donut")
-        {
-            mode = true;
-            donutMode();
-        }
-        else
-        {
-            cout << "Sorry that wasn't a game mode. Try again." << endl;
-        }
-    }
-}
-
-void Map::alter(char top, char bottom, char left, char right, char tl, char tr, char bl, char br, int row, int col)
-{
-    int neighborCount = 0;
-    if (top == 'X')
-    {
-        neighborCount++;
-    }
-    if (bottom == 'X')
-    {
-        neighborCount++;
-    }
-    if (left == 'X')
-    {
-        neighborCount++;
-    }
-    if (right == 'X')
-    {
-        neighborCount++;
-    }
-    if (tl == 'X')
-    {
-        neighborCount++;
-    }
-    if (tr == 'X')
-    {
-        neighborCount++;
-    }
-    if (bl == 'X')
-    {
-        neighborCount++;
-    }
-    if (br == 'X')
-    {
-        neighborCount++;
-    }
-    
-    if (neighborCount <= 1)
-    {
-        newMap[row][col] = '-';
-    }
-    else if (neighborCount == 3)
-    {
-        newMap[row][col] = 'X';
-    }
-    else if (neighborCount >= 4)
-    {
-        newMap[row][col] = '-';
-    }
-}
-
-void Map::classicMode()
-{
+    outFile = GameFunctions().getOut();
+    generation = 0;
+    height = Map().getHeight();
+    length = Map().getLength();
+    currentMap = Map().getCurrentMap();
+    newMap = Map().getNewMap();
 
     if (pMethod == "file")
     {
@@ -463,7 +239,6 @@ void Map::classicMode()
         cout << endl << "Welcome to classic mode!" << endl << endl;
     }
     
-    generation = 0;
     bool check = false;
 
     while(!check)
@@ -595,8 +370,14 @@ void Map::classicMode()
     }
 }
 
-void Map::mirrorMode()
+void GameModes::mirrorMode()
 {
+    outFile = GameFunctions().getOut();
+    generation = 0;
+    height = Map().getHeight();
+    length = Map().getLength();
+    currentMap = Map().getCurrentMap();
+    newMap = Map().getNewMap();
 
     if (pMethod == "file")
     {
@@ -742,8 +523,16 @@ void Map::mirrorMode()
     }
 }
 
-void Map::donutMode()
+void GameModes::donutMode()
 {
+
+    outFile = GameFunctions().getOut();
+    generation = 0;
+    height = Map().getHeight();
+    length = Map().getLength();
+    currentMap = Map().getCurrentMap();
+    newMap = Map().getNewMap();
+
     if (pMethod == "file")
     {
         ofstream mapStream;
